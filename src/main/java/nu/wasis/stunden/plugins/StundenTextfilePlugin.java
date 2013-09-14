@@ -1,9 +1,10 @@
 package nu.wasis.stunden.plugins;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,6 +24,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
@@ -82,7 +84,7 @@ public class StundenTextfilePlugin implements InputPlugin {
     private WorkPeriod readSingleFile(final File file) throws FileNotFoundException, IOException {
         // LOG.debug("Parsing file " + file.getName());
         final DateTime date = getDate(file);
-        final WorkPeriod workPeriod = new WorkPeriod(date, date);
+        final WorkPeriod workPeriod = new WorkPeriod();
         final Day day = parseContent(date, file);
         workPeriod.getDays().add(day);
         return workPeriod;
@@ -105,24 +107,43 @@ public class StundenTextfilePlugin implements InputPlugin {
     }
 
     private Day parseContent(final DateTime date, final File file) throws FileNotFoundException, IOException {
-        final List<String> lines = IOUtils.readLines(new FileReader(file));
+        @SuppressWarnings("resource")
+		UnicodeBOMInputStream unicodeBOMInputStream = new UnicodeBOMInputStream(new FileInputStream(file));
+		final List<String> lines = IOUtils.readLines(new InputStreamReader(unicodeBOMInputStream.skipBOM(), "UTF8"));
         if (lines.isEmpty()) {
             throw new EmptyFileException("File `" + file + "' is empty. Empty files are not cool.");
         }
         final List<Entry> entries = new LinkedList<>();
 
         for (final String line : lines) {
+        	if (line.startsWith("#") || line.isEmpty()) {
+        		continue;
+        	}
             if (line.length() < 15) {
                 // compare:
-                // 123456789012345
+                // 0123456789012345
                 // 10:00 - 10:45: Intern
                 throw new InvalidEntryException("Magic tells me that the line `" + line + "' in file `" + file + "' is not cool.");
             }
             try {
-                final int beginHour = Integer.parseInt(line.substring(0, 2));
-                final int beginMinutes = Integer.parseInt(line.substring(3, 5));
-                final int endHour = Integer.parseInt(line.substring(8, 10));
-                final int endMinutes = Integer.parseInt(line.substring(11, 13));
+                final String beginHourString = StringUtils.stripStart(line.substring(0, 2), "0");
+				int beginHour = 0;
+				try {
+					beginHour = Integer.parseInt(beginHourString);
+				} catch (final NumberFormatException e) {
+	                throw new InvalidEntryException("Unable to parse line `" + line + "' of file `" + file + "'. => invalid starting hour of `" + beginHourString + "'.", e);
+	            } 
+                int beginMinutes = 0;
+                final String beginMinutesString = line.substring(3, 5);
+                if (!"00".equals(beginMinutesString)) {
+                	beginMinutes = Integer.parseInt(beginMinutesString);
+                }
+                final int endHour = Integer.parseInt(StringUtils.stripStart(line.substring(8, 10), "0"));
+                int endMinutes = 0;
+                final String endMinutesString = line.substring(11, 13);
+				if (!"00".equals(endMinutesString)) {
+					endMinutes = Integer.parseInt(endMinutesString);
+				}
                 final String projectName = line.substring(15).trim();
                 final MutableDateTime begin = new MutableDateTime(date);
                 begin.setHourOfDay(beginHour);
@@ -132,7 +153,7 @@ public class StundenTextfilePlugin implements InputPlugin {
                 end.setMinuteOfHour(endMinutes);
                 entries.add(new Entry(begin.toDateTime(), end.toDateTime(), new Project(projectName)));
             } catch (final NumberFormatException e) {
-                throw new InvalidEntryException("Unable to parse line `" + line + "' of file `" + file + "'.");
+                throw new InvalidEntryException("Unable to parse line `" + line + "' of file `" + file + "'.", e);
             }
         }
 
