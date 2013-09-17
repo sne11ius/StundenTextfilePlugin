@@ -83,7 +83,7 @@ public class StundenTextfilePlugin implements InputPlugin {
     }
 
     private WorkPeriod readSingleFile(final File file, final boolean stripProjectNamesOnEqualitySign) throws FileNotFoundException, IOException {
-        // LOG.debug("Parsing file " + file.getName());
+        LOG.debug("Parsing file `" + file.getAbsolutePath() + "'");
         final DateTime date = getDate(file);
         final WorkPeriod workPeriod = new WorkPeriod();
         final Day day = parseContent(date, file, stripProjectNamesOnEqualitySign);
@@ -93,7 +93,7 @@ public class StundenTextfilePlugin implements InputPlugin {
 
     private DateTime getDate(final File file) {
         if (!file.isFile()) {
-            throw new RuntimeException("Can only get dates from files :D - but I smile.");
+            throw new RuntimeException("Can only get dates from files, not directories :D - but I smile.");
         }
         final Parser dateParser = new Parser();
         final List<DateGroup> dateGroups = dateParser.parse(FilenameUtils.removeExtension(file.getName()));
