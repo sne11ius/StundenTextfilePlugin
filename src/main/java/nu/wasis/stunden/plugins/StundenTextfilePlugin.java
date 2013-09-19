@@ -162,7 +162,7 @@ public class StundenTextfilePlugin implements InputPlugin {
                 final MutableDateTime end = new MutableDateTime(date);
                 end.setHourOfDay(endHour);
                 end.setMinuteOfHour(endMinutes);
-                entries.add(new Entry(begin.toDateTime(), end.toDateTime(), new Project(projectName)));
+                entries.add(new Entry(begin.toDateTime(), end.toDateTime(), new Project(projectName), false));
             } catch (final NumberFormatException e) {
                 throw new InvalidEntryException("Unable to parse line `" + line + "' of file `" + file + "'.", e);
             }
