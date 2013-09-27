@@ -59,9 +59,9 @@ public class StundenTextfilePlugin implements InputPlugin {
 
         try {
             if (inputFile.isDirectory()) {
-                workPeriod = readDirectory(inputFile, stripProjectNamesOnEqualitySign);
+                workPeriod = readDirectory(inputFile, stripProjectNamesOnEqualitySign, myConfig.getNightLimit());
             } else {
-                workPeriod = readSingleFile(inputFile, stripProjectNamesOnEqualitySign);
+                workPeriod = readSingleFile(inputFile, stripProjectNamesOnEqualitySign, myConfig.getNightLimit());
             }
         } catch (final IOException e) {
             throw new RuntimeException("Something went horribly wrong.", e);
@@ -70,23 +70,23 @@ public class StundenTextfilePlugin implements InputPlugin {
         return workPeriod;
     }
 
-    private WorkPeriod readDirectory(final File directory, final boolean stripProjectNamesOnEqualitySign) throws FileNotFoundException, IOException {
+    private WorkPeriod readDirectory(final File directory, final boolean stripProjectNamesOnEqualitySign, final int nightLimit) throws FileNotFoundException, IOException {
         WorkPeriod workPeriod = null;
         for (final File file : FileUtils.listFiles(directory, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE)) {
             if (null == workPeriod) {
-                workPeriod = readSingleFile(file, stripProjectNamesOnEqualitySign);
+                workPeriod = readSingleFile(file, stripProjectNamesOnEqualitySign, nightLimit);
             } else {
-                workPeriod.addAll(readSingleFile(file, stripProjectNamesOnEqualitySign));
+                workPeriod.addAll(readSingleFile(file, stripProjectNamesOnEqualitySign, nightLimit));
             }
         }
         return workPeriod;
     }
 
-    private WorkPeriod readSingleFile(final File file, final boolean stripProjectNamesOnEqualitySign) throws FileNotFoundException, IOException {
+    private WorkPeriod readSingleFile(final File file, final boolean stripProjectNamesOnEqualitySign, final int nightLimit) throws FileNotFoundException, IOException {
         LOG.debug("Parsing file `" + file.getAbsolutePath() + "'");
         final DateTime date = getDate(file);
         final WorkPeriod workPeriod = new WorkPeriod();
-        final Day day = parseContent(date, file, stripProjectNamesOnEqualitySign);
+        final Day day = parseContent(date, file, stripProjectNamesOnEqualitySign, nightLimit);
         workPeriod.getDays().add(day);
         return workPeriod;
     }
@@ -107,7 +107,7 @@ public class StundenTextfilePlugin implements InputPlugin {
         return new DateTime(dateGroup.getDates().get(0));
     }
 
-    private Day parseContent(final DateTime date, final File file, final boolean stripProjectNamesOnEqualitySign) throws FileNotFoundException, IOException {
+    private Day parseContent(final DateTime date, final File file, final boolean stripProjectNamesOnEqualitySign, final int nightLimit) throws FileNotFoundException, IOException {
         @SuppressWarnings("resource")
 		UnicodeBOMInputStream unicodeBOMInputStream = new UnicodeBOMInputStream(new FileInputStream(file));
 		final List<String> lines = IOUtils.readLines(new InputStreamReader(unicodeBOMInputStream.skipBOM(), "UTF8"));
@@ -162,6 +162,10 @@ public class StundenTextfilePlugin implements InputPlugin {
                 final MutableDateTime end = new MutableDateTime(date);
                 end.setHourOfDay(endHour);
                 end.setMinuteOfHour(endMinutes);
+                if (endHour <= nightLimit) {
+                	LOG.debug("You seem to have worked overnight. Adjusting end time :)");
+                	end.addDays(1);
+                }
                 entries.add(new Entry(begin.toDateTime(), end.toDateTime(), new Project(projectName), false));
             } catch (final NumberFormatException e) {
                 throw new InvalidEntryException("Unable to parse line `" + line + "' of file `" + file + "'.", e);
