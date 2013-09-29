@@ -1,0 +1,7 @@
+﻿09:15 - 12:00: ProjectZ = 2,75
+12:00 - 13:00: Essen
+13:00 - 15:00: ProjectZ = 2,0
+15:00 - 18:15: ProjectX - Doing stuff A = 3,25
+
+# ProjectZ: 4,75
+# ProjectX: 3,25

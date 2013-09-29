@@ -1,0 +1,8 @@
+﻿09:00 - 11:30: ProjectY = 2,5
+11:30 - 13:30: ProjectX = 2,0
+13:30 - 13:45: ProjectXY = 0,25
+13:45 - 18:00: ProjectX = 4,25
+
+# ProjectY = 2,5
+# ProjectX: 6,25
+# ProjectXY: 0,25

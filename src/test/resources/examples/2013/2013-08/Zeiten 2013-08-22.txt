@@ -1,0 +1,9 @@
+﻿09:00 - 12:00: ProjectZ = 3,0
+12:00 - 12:30: Pause
+12:30 - 15:30: ProjectZ = 3,0
+15:30 - 16:00: ProjectX = 0,5
+16:00 - 18:00: ProjectY = 2
+
+# ProjectZ: 6
+# ProjectX: 0,5
+# ProjectY = 2

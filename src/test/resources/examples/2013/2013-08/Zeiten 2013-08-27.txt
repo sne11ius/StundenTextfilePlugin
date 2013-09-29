@@ -1,0 +1,7 @@
+﻿08:30 - 09:30: Intern = 1
+09:30 - 12:00: ProjectX - Doing stuff A = 2,5
+12:00 - 12:30: Pause
+12:30 - 18:15: ProjectX - Doing stuff A = 5,75
+
+# Intern: 1
+# ProjectX: 8,25

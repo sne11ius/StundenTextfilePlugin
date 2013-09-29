@@ -1,0 +1,9 @@
+﻿09:30 - 09:45: Intern = 0,25
+09:45 - 11:00: ProjectX = 1,25
+11:00 - 11:30: ProjectZ = 0,5
+11:30 - 12:00: Pause
+12:00 - 17:30: ProjectX = 5,5
+
+# Intern: 0,25
+# ProjectX: 6,75
+# ProjectZ: 0,5

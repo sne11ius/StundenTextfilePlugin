@@ -1,0 +1,5 @@
+﻿09:30 - 12:00: ProjectX - Doing stuff A = 2,5
+12:00 - 13:00: Essen
+13:00 - 17:00: ProjectX - Doing stuff A = 4
+
+# ProjectX - Doing stuff A: 6,5

@@ -1,0 +1,8 @@
+﻿09:30 - 10:15: ProjectW = 0,75
+10:15 - 13:00: Reise nach CityTown = 2,75
+13:00 - 17:15: Besprechung ProjectX = 4,25
+17:15 - 20:00: Rückfahrt = 2,75
+
+# Intern: 0,75
+# Reise: 5,5
+# ProjectX: 4,25

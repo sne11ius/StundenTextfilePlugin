@@ -1,0 +1,11 @@
+﻿09:00 - 09:15: Project U = 0,25
+09:15 - 11:15: Project S = 2
+11:15 - 12:00: ProjectZ = 0,75
+12:00 - 13:00: Essen
+13:00 - 13:45: ProjectZ = 0,75
+13:45 - 17:30: ProjectX = 3,75
+
+# Project U: 0,25
+# Intern: 2
+# ProjectZ: 1,5
+# ProjectX: 3,75
