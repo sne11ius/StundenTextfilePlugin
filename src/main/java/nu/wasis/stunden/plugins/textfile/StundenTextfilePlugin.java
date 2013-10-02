@@ -1,4 +1,4 @@
-package nu.wasis.stunden.plugins;
+package nu.wasis.stunden.plugins.textfile;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,10 +15,10 @@ import nu.wasis.stunden.model.Entry;
 import nu.wasis.stunden.model.Project;
 import nu.wasis.stunden.model.WorkPeriod;
 import nu.wasis.stunden.plugin.InputPlugin;
-import nu.wasis.stunden.plugins.exception.EmptyFileException;
-import nu.wasis.stunden.plugins.exception.InvalidEntryException;
-import nu.wasis.stunden.plugins.exception.InvalidFilenameException;
 import nu.wasis.stunden.plugins.textfile.config.StundenTextfilePluginConfig;
+import nu.wasis.stunden.plugins.textfile.exception.EmptyFileException;
+import nu.wasis.stunden.plugins.textfile.exception.InvalidEntryException;
+import nu.wasis.stunden.plugins.textfile.exception.InvalidFilenameException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;

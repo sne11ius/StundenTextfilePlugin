@@ -1,4 +1,4 @@
-package nu.wasis.stunden.plugins.exception;
+package nu.wasis.stunden.plugins.textfile.exception;
 
 public class InvalidFilenameException extends RuntimeException {
 
