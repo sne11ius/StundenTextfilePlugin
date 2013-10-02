@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.xeoh.plugins.base.annotations.PluginImplementation;
-import nu.wasis.stunden.exception.InvalidArgumentsException;
+import nu.wasis.stunden.exception.InvalidConfigurationException;
 import nu.wasis.stunden.model.Day;
 import nu.wasis.stunden.model.Entry;
 import nu.wasis.stunden.model.Project;
@@ -40,16 +40,16 @@ public class StundenTextfilePlugin implements InputPlugin {
     @Override
     public WorkPeriod read(final Object config) {
         if (null == config) {
-            throw new InvalidArgumentsException("Param `config' must not be null.");
+            throw new InvalidConfigurationException("Param `config' must not be null.");
         }
         final StundenTextfilePluginConfig myConfig = (StundenTextfilePluginConfig) config;
         final String readFrom = myConfig.getReadFrom();
         if (null == readFrom) {
-            throw new InvalidArgumentsException("Config must contain `readFrom' param.");
+            throw new InvalidConfigurationException("Config must contain `readFrom' param.");
         }
         final File inputFile = new File(readFrom);
         if (!inputFile.exists()) {
-            throw new InvalidArgumentsException("Arg `readFrom' must be an existing file or directory.");
+            throw new InvalidConfigurationException("Arg `readFrom' must be an existing file or directory.");
         }
         final boolean stripProjectNamesOnEqualitySign = myConfig.getStripProjectNamesOnEqualitySign();
 
