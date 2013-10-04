@@ -1,3 +1,4 @@
+/* Copy paste from the intertubes. Google it. */
 package nu.wasis.stunden.plugins.textfile;
 
 /* ____________________________________________________________________________

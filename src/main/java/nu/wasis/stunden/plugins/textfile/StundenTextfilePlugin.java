@@ -16,7 +16,6 @@ import nu.wasis.stunden.model.Project;
 import nu.wasis.stunden.model.WorkPeriod;
 import nu.wasis.stunden.plugin.InputPlugin;
 import nu.wasis.stunden.plugins.textfile.config.StundenTextfilePluginConfig;
-import nu.wasis.stunden.plugins.textfile.exception.EmptyFileException;
 import nu.wasis.stunden.plugins.textfile.exception.InvalidEntryException;
 import nu.wasis.stunden.plugins.textfile.exception.InvalidFilenameException;
 
@@ -32,17 +31,39 @@ import org.joda.time.MutableDateTime;
 import com.joestelmach.natty.DateGroup;
 import com.joestelmach.natty.Parser;
 
+/**
+ * Reads {@link WorkPeriod}s from simple text files - recursively of pointed to
+ * a directory.
+ * <p>
+ * All entries in the file(s) must contain a parsable date in the file name and
+ * have this format:
+ * <pre>
+ * hh:mm - hh:mm: Description # Comment
+ * </pre>
+ * The comment is optional.
+ * </p>
+ * <p>
+ * For options, see {@link StundenTextfilePluginConfig}.
+ * </p>
+ */
 @PluginImplementation
 public class StundenTextfilePlugin implements InputPlugin {
 
     private static final Logger LOG = Logger.getLogger(StundenTextfilePlugin.class);
 
+    /**
+     * Reads the text files specified in the configuration.
+     * 
+     * @param configuration The configuration to use. Must be of type
+     *        {@link StundenTextfilePluginConfig}. Configuration parameter
+     *        `readFrom' must point to a file or directory.
+     */
     @Override
-    public WorkPeriod read(final Object config) {
-        if (null == config) {
-            throw new InvalidConfigurationException("Param `config' must not be null.");
-        }
-        final StundenTextfilePluginConfig myConfig = (StundenTextfilePluginConfig) config;
+    public WorkPeriod read(final Object configuration) {
+    	if (null == configuration || !(configuration instanceof StundenTextfilePluginConfig)) {
+			throw new InvalidConfigurationException("Configuration null or wrong type. You probably need to fix your configuration file.");
+		}
+        final StundenTextfilePluginConfig myConfig = (StundenTextfilePluginConfig) configuration;
         final String readFrom = myConfig.getReadFrom();
         if (null == readFrom) {
             throw new InvalidConfigurationException("Config must contain `readFrom' param.");
@@ -111,9 +132,6 @@ public class StundenTextfilePlugin implements InputPlugin {
         @SuppressWarnings("resource")
 		UnicodeBOMInputStream unicodeBOMInputStream = new UnicodeBOMInputStream(new FileInputStream(file));
 		final List<String> lines = IOUtils.readLines(new InputStreamReader(unicodeBOMInputStream.skipBOM(), "UTF8"));
-        if (lines.isEmpty()) {
-            throw new EmptyFileException("File `" + file + "' is empty. Empty files are not cool.");
-        }
         final List<Entry> entries = new LinkedList<>();
 
         for (final String line : lines) {
