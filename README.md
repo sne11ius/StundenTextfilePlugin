@@ -6,12 +6,15 @@ Plugin for https://github.com/sne11ius/stunden that reads data from human friend
 Configuration
 =============
 
+`readFrom` must point to a file a directory that contains your data. If it is a directory,
+_all_ files will be recursively read and must be parsable for this plugin.
+
 `nightLimit`: Number of hours of a day that should belong to the preceding day. If e.g. you happen to work from
 `23:00 - 02:00`, this plugin might kinda freak out and compute negative durations. So if you have such cases,
 make sure (nightLimit >= end work time). Example: `4`
 
-`readFrom` must point to a file a directory that contains your data. If it is a directory,
-_all_ files will be recursively read and must be parsable for this plugin.
+`stripProjectNamesOnEqualitySign`: Whether or not `=` should be treated as a line comment indicator. If
+`true`, a project name like `Project A = XYZ` will become `Project A`. Example: `false`
 
 Alle files must contain a date in the filename and may only be composed of lines of the following form:
 
