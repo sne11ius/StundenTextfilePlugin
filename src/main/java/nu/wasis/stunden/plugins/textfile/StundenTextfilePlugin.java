@@ -157,7 +157,7 @@ public class StundenTextfilePlugin implements InputPlugin {
                 if (!"00".equals(beginMinutesString)) {
                 	beginMinutes = Integer.parseInt(beginMinutesString);
                 }
-                final int endHour = Integer.parseInt(StringUtils.stripStart(line.substring(8, 10), "0"));
+                final int endHour = line.substring(8, 10).equals("00") ? 0 : Integer.parseInt(StringUtils.stripStart(line.substring(8, 10), "0"));
                 int endMinutes = 0;
                 final String endMinutesString = line.substring(11, 13);
 				if (!"00".equals(endMinutesString)) {
